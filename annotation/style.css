@@ -1,0 +1,10 @@
+#lyrics, #title {
+	font-family: Helvetica;
+	text-align: center;
+	color: black;
+}
+
+video {
+	display: block;
+	margin: 0 auto;
+}
