@@ -14,7 +14,13 @@
 <div id="lyrics"></div>
 
 <script>
-	// Complete this section and create a CSS file named style.css
+	var l = document.getElementById("lyrics");
+	var v = document.getElementById("failvideo");
+	v.addEventListener("timeupdate", function () {
+		if (v.currentTime < 9) {
+			l.innerHTML = "<h2> Mariah Carey EPIC Fail! </h2>";
+		}
+	}, false);
 </script>
 </body>
 </html>	
