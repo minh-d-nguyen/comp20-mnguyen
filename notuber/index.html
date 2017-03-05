@@ -42,10 +42,10 @@
       function init()
       {
         map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-        getMyLocation();
+        getAllLocation();
       }
       
-      function getMyLocation() {
+      function getAllLocation() {
         if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
           navigator.geolocation.getCurrentPosition(function(position) {
             myLat = position.coords.latitude;
@@ -59,7 +59,56 @@
 
             request.onreadystatechange = function() {
               if(request.readyState == 4 && request.status == 200) {
-                
+                data = request.responseText;
+                allUser = JSON.parse(data);
+                var key = "";
+                if ("passengers" in allUser) {
+                  key = "passengers";
+                } else {
+                  key = "vehicles";
+                }
+
+                var icon;
+
+                console.log(allUser);
+                console.log(key);
+
+                allUser = allUser[key];
+
+                if (key == "passengers") {
+                  icon = "passenger.png";
+                } else {
+                  icon = "black_car.png";
+                }
+            
+                // Create a marker
+                var image = {
+                  url: icon,
+                  size: new google.maps.Size(20, 32),
+                };
+
+                var markers = [];
+                    
+                for (var i = 0; i < allUser.length; i++) {
+                  var user = allUser[i];
+                  var marker = new google.maps.Marker({
+                    position: {lat: user["lat"], lng: user["lng"]},
+                    map: map,
+                    icon: image,
+                    name: user["username"],
+                  });
+                  markers.push(marker);
+
+                  marker.setMap(map);                 
+                }
+
+                for (var i = 0; i < markers.length; i++) {
+                  // Open info window on click of marker
+                  google.maps.event.addListener(markers[i], 'click', function() {
+                    infowindow.setContent(marker[i].name);
+                    infowindow.open(map, marker[i]);
+                  });
+                }
               }
             }
 
