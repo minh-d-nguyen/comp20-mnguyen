@@ -22,7 +22,7 @@
         height: 100%;
       }
     </style>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&sensor=true&libraries=geometry"></script>
     
     <script>
       var myLat = 0;
@@ -87,29 +87,26 @@
                     
                 for (var i = 0; i < allUser.length; i++) {
                   var user = allUser[i];
+                  var distance = google.maps.geometry.spherical.computeDistanceBetween(
+                                 new google.maps.LatLng(myLat, myLng),
+                                 new google.maps.LatLng(user["lat"], user["lng"])) * 0.000621371192;
+
                   var marker = new google.maps.Marker({
                     position: {lat: user["lat"], lng: user["lng"]},
                     map: map,
                     icon: image,
                     name: user["username"],
+                    distance: distance
                   });
                   markers.push(marker);
 
-                  marker.setMap(map);                 
-                }
+                  marker.setMap(map); 
 
-                for (var i = 0; i < markers.length; i++) {
-                  displayMarker(markers[i]);
-
-                  function displayMarker(marker) {
-                    // Open info window on click of marker
-                    if (marker && marker.name) {
-                      google.maps.event.addListener(markers[i], 'click', function() {
-                        infowindow.setContent(marker.name);
-                        infowindow.open(map, marker);
-                      });
-                    }
-                  }
+                  // Open info window on click of marker
+                  google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent("Name: " + this.name + "<br>" + "Distance: " +this.distance + " mile(s)");
+                    infowindow.open(map, this);
+                  });                
                 }
               }
             }
