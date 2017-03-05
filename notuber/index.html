@@ -50,7 +50,6 @@
           navigator.geolocation.getCurrentPosition(function(position) {
             myLat = position.coords.latitude;
             myLng = position.coords.longitude;
-            console.log("username=" + username + "&lat=" + myLat + "&lng=" + myLng);
             renderMap();
             request.open("POST", "https://defense-in-derpth.herokuapp.com/submit", true);
 
@@ -70,21 +69,18 @@
 
                 var icon;
 
-                console.log(allUser);
-                console.log(key);
-
                 allUser = allUser[key];
 
-                if (key == "passengers") {
-                  icon = "passenger.png";
-                } else {
+                if (key == "vehicles") {
                   icon = "black_car.png";
+                } else {
+                  icon = "red_pin.png";
                 }
-            
+
                 // Create a marker
                 var image = {
                   url: icon,
-                  size: new google.maps.Size(20, 32),
+                  scaledSize: new google.maps.Size(20, 20),
                 };
 
                 var markers = [];
@@ -117,7 +113,7 @@
                 }
               }
             }
-            
+
             request.send("username=" + username + "&lat=" + myLat + "&lng=" + myLng);
           });
         }
@@ -133,18 +129,6 @@
         // Update map and go there...
         map.panTo(me);
   
-        // Create a marker
-        marker = new google.maps.Marker({
-          position: me,
-          title: "Here I Am!"
-        });
-        marker.setMap(map);
-          
-        // Open info window on click of marker
-        google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent(marker.title);
-          infowindow.open(map, marker);
-        });
       }
     </script>
   </head>
