@@ -103,15 +103,21 @@
                 }
 
                 for (var i = 0; i < markers.length; i++) {
-                  // Open info window on click of marker
-                  google.maps.event.addListener(markers[i], 'click', function() {
-                    infowindow.setContent(marker[i].name);
-                    infowindow.open(map, marker[i]);
-                  });
+                  displayMarker(markers[i]);
+
+                  function displayMarker(marker) {
+                    // Open info window on click of marker
+                    if (marker && marker.name) {
+                      google.maps.event.addListener(markers[i], 'click', function() {
+                        infowindow.setContent(marker.name);
+                        infowindow.open(map, marker);
+                      });
+                    }
+                  }
                 }
               }
             }
-
+            
             request.send("username=" + username + "&lat=" + myLat + "&lng=" + myLng);
           });
         }
