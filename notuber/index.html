@@ -67,8 +67,6 @@
                   url: icon,
                   scaledSize: new google.maps.Size(20, 20),
                 };
-
-                var markers = [];
                     
                 for (var i = 0; i < allUser.length; i++) {
                   var user = allUser[i];
@@ -83,7 +81,6 @@
                     name: user["username"],
                     distance: distance
                   });
-                  markers.push(marker);
 
                   marker.setMap(map); 
 
@@ -111,6 +108,20 @@
         // Update map and go there...
         map.panTo(me);
   
+        var marker = new google.maps.Marker({
+          position: me,
+          map: map,
+          icon: "arrow.png",
+          name: "Current Location",
+        });
+
+        marker.setMap(map); 
+
+        // Open info window on click of marker
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(this.name);
+          infowindow.open(map, this);
+        });
       }
     </script>
   </head>
