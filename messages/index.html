@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>Messages</title>
+  <meta charset="utf-8">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script>
     // Complete this section...
@@ -10,7 +11,8 @@
     	$.get("https://messagehub.herokuapp.com/messages.json", function(data) {
     		$('#messages').html('');
     		$.each(data, function() {
-    			$('#messages').append('<p>' + this.content + ' by ' + this.username + '<p>');
+    			$('#messages').append('<p>' + this.content + ' by ' + this.username 
+    			  + '<p>');
     		});
     	});
     });
