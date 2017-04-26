@@ -27,6 +27,7 @@
 			<ul class="abstract">
 			<li>The username input is not sanitized at all before being displayed to the client. Hence, a Cross Site Scripting Attack may completely prevent the user from properly accessing the page through a browser.</li>
 			<li>Even though the lat and lng values are checked, there is still a particular malicious value that can be posted to throw off the performance of the program.</li>
+			<li>An unsafe data storing method for the collection of passenger is used that might potentially result in modification of data that the client is not allowed to access.</li>
 			</ul>
 		</li>
 		<li> <h4>Issues Found:</h4>
@@ -47,7 +48,7 @@
 			</li>
 			<br>
 			<li>
-				Junk data being stored that might affect the performance of Assignment 2: <br>
+				Junk data that can be injected that might affect the performance of web apps using the server to find passengers/vehicles: <br>
 				Location found: https://polar-oasis-78824.herokuapp.com/submit <br>
 				Severity: Low. Bad lat and lng values can be posted so that they are stored in the database as null values, which affects how the users are displayed on the map.<br>
 				Description of issue: 
@@ -56,26 +57,26 @@
 					<img src="latlng-issue.png" alt="Image not found!" class="issues"><br>
 					<li>Next: We can see that this instance will be stored in the passenger collection with empty lat and lng values. This is because even though the server check if the lat and lng values it receives is not undefined or NaN, an empty space character passes these tests. </li>
 					<img src="latlng-database.png" alt="Image not found!" class="issues">
-					<li>Then, if any vehicle want to get the list of passenger and display them on a map, there will be a fake passenger in Africa. This is not a particularly harmful issue, but it affects the performance of the program and the experience of the users nonetheless.</li>
+					<li>Then, if any vehicle want to get the list of passengers and display them on a map, there will be a fake passenger in Africa. This is not a particularly harmful issue, but it affects the performance of the program and the experience of the users nonetheless.</li>
 					<img src="latlng-result.png" alt="Image not found!" class="issues">
 					<li>Resolution: To check for single space character in lat and lng.</li>
 				</ul>
 			</li>
 			<br>
 			<li>
-				Potential illegal data access issue:<br>
+				Potential illegal data modification issue:<br>
 				Location found: https://polar-oasis-78824.herokuapp.com/submit <br>
-				Severity: Low. MongoDB query-like string can be sent to the server to trick the server to search for username that is not allowed to be returned. The result is not shown to the client, and the malicious username is not stored properly in the databse, but it might be an issue if MongoDB changes the way it stores data.<br>
+				Severity: Low. MongoDB query-like string can be sent to the server to trick the server to search for username that is not allowed to be accessed. The result is not shown to the client, and the malicious username is not stored properly in the databse, but it might be an issue if MongoDB changes the way it stores data.<br>
 				Description of issue: 
 				<ul>
 					<li>First: Use Postman to POST the following information. </li>
 					<img src="db-post.png" alt="Image not found!" class="issues"><br>
-					<li>Next: We can see that the server will parse the username sent above as {$ne: "who"}, which is similar to a MongoDB query documents in which username is not "who". </li>
+					<li>Next: We can see that the server will parse the username sent above as {$ne: "who"}, which is similar to a MongoDB query that finds documents in which the username is not "who". </li>
 					<img src="db-issue.png" alt="Image not found!" class="issues">
-					<li>Then, as it looks for documents in which username is not "who", it returns a document in which username is "minh", as shown below.</li>
+					<li>Then, as it looks for documents in which the username is not "who", it returns a document in which the username is "minh", as shown below.</li>
 					<img src="db-issue2.png" alt="Image not found!" class="issues">
 					<li>Finally, when the server tries to update the document with username "minh", which is not allowed to be accessed, to the malicious data just posted by the client, MongoDB stops the process as it does not allow a document whose value has a dollar sign ($) character to be stored, as shown below. However, if MongoDB changes this rule in the future, then the document with username "minh" will be removed from the database by this attack. Therefore, it is still better to take this issue into account.</li>
-					<img src="db-storeissue.png" alt="Image not found!" class="issues">
+					<img height=100% src="db-storeissue.png" alt="Image not found!" class="issues">
 					<li>Resolution: To check whether the username key returned by the query is identical to the original username key before updating the database.</li>
 				</ul>
 			</li>
