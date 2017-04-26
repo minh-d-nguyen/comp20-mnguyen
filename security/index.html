@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Assignment 4 Report</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styling.css">
+</head>
+
+<body>
+	<div class="header">
+		<h1> Assignment 4 Report </h1>
+		<h3> by: Minh D. Nguyen </h3>
+		<h3> Partner: Winston Tan </h3>
+	</div>
+
+	<div class="body">
+		<ol class="sections">
+		<li><h4>Introduction:</h4></li>
+			<ul class="intro">
+				<li>Product: A web server that works with two sets of data: vehicles and passengers. This server returns to the client the set of all currently active vehicles if the client is a passenger, and vice versa when the client post their information. The web server also returns the information about a specific vehicle or all past requests.
+				</li>
+				<li>Task: To find any privacy or security issue with the server.</li>
+			</ul>
+		<li> <h4>Methodology:</h4> Use curl and Postman to get/post data in different ways and analyze the response from the server to find any potential security issue. Then, analyze the code of the server to confirm the issue, find a resolution, and identify any other problem.</li>
+		<li> <h4>Abstract of Findings:</h4>
+			<ul class="abstract">
+			<li>The username input is not sanitized at all before being displayed to the client. Hence, a Cross Site Scripting Attack may completely prevent the user from properly accessing the page through a browser.</li>
+			<li>Even though the lat and lng values are checked, there is still a particular malicious value that can be posted to throw off the performance of the program.</li>
+			</ul>
+		</li>
+		<li> <h4>Issues Found:</h4>
+			<ol>
+			<li>
+				Cross Site Scripting Vulnerability: <br>
+				Location found: https://polar-oasis-78824.herokuapp.com/ <br>
+				Severity: High. Might completely prevent the users from accessing the page. <br>
+				Description of issue: 
+				<ul>
+					<li>First: Use Postman to send a JavaScript function as username and legitimate values as lat and lng as shown below.</li>
+					<img src="xss-post.png" alt="Image not found!" class="issues"><br>
+					<li>Next: After this function is inserted into the database, it will be retrieved through route GET /. The function will be executed when the information are displayed in the html page sent to the client.</li>
+					<li>For the above POST info, an alert box will pop up every time https://polar-oasis-78824.herokuapp.com/ is accessed (see image below). If the JavaScript function POSTed redirects the client to another page, the client will not be able to access the original page at all.</li>
+					<img src="xss-result.png" alt="Image not found!" class="issues"><br>
+				</ul>
+				Resolution: Sanitize the username by replacing every special character by the empty character.
+			</li>
+			<br>
+			<li>
+				Junk data being stored that might affect the performance of Assignment 2: <br>
+				Location found: https://polar-oasis-78824.herokuapp.com/submit <br>
+				Severity: Low. Bad lat and lng values can be posted so that they are stored in the database as null values, which affects how the users are displayed on the map.<br>
+				Description of issue: 
+				<ul>
+					<li>First: Use Postman to send ' ' (an empty space) as lat and lng as shown below. </li>
+					<img src="latlng-issue.png" alt="Image not found!" class="issues"><br>
+					<li>Next: We can see that this instance will be stored in the passenger collection with empty lat and lng values. This is because even though the server check if the lat and lng values it receives is not undefined or NaN, an empty space character passes these tests. </li>
+					<img src="latlng-database.png" alt="Image not found!" class="issues">
+					<li>Then, if any vehicle want to get the list of passenger and display them on a map, there will be a fake passenger in Africa. This is not a particularly harmful issue, but it affects the performance of the program and the experience of the users nonetheless.</li>
+					<img src="latlng-result.png" alt="Image not found!" class="issues">
+					<li>Resolution: To check for single space character in lat and lng.</li>
+				</ul>
+			</li>
+			<br>
+			<li>
+				Potential illegal data access issue:<br>
+				Location found: https://polar-oasis-78824.herokuapp.com/submit <br>
+				Severity: Low. MongoDB query-like string can be sent to the server to trick the server to search for username that is not allowed to be returned. The result is not shown to the client, and the malicious username is not stored properly in the databse, but it might be an issue if MongoDB changes the way it stores data.<br>
+				Description of issue: 
+				<ul>
+					<li>First: Use Postman to POST the following information. </li>
+					<img src="db-post.png" alt="Image not found!" class="issues"><br>
+					<li>Next: We can see that the server will parse the username sent above as {$ne: "who"}, which is similar to a MongoDB query documents in which username is not "who". </li>
+					<img src="db-issue.png" alt="Image not found!" class="issues">
+					<li>Then, as it looks for documents in which username is not "who", it returns a document in which username is "minh", as shown below.</li>
+					<img src="db-issue2.png" alt="Image not found!" class="issues">
+					<li>Finally, when the server tries to update the document with username "minh", which is not allowed to be accessed, to the malicious data just posted by the client, MongoDB stops the process as it does not allow a document whose value has a dollar sign ($) character to be stored, as shown below. However, if MongoDB changes this rule in the future, then the document with username "minh" will be removed from the database by this attack. Therefore, it is still better to take this issue into account.</li>
+					<img src="db-storeissue.png" alt="Image not found!" class="issues">
+					<li>Resolution: To check whether the username key returned by the query is identical to the original username key before updating the database.</li>
+				</ul>
+			</li>
+			</ol>
+		</li>
+		<li><h4>Conclusion:</h4> Overall, there is one high severity issue and a few low severity vulnerabilities detected. The best solution to these problems is string checking to make sure the data sent to the server is adequate.</li>
+		<li><h4>References:</h4>
+		<ul>
+			<li>Professor Ming Chow's talk on Abusing NoSQL Database: https://www.youtube.com/watch?v=lcO1BTNh8r8 </li>
+			<li>Hacking NodeJS and MongoDB: http://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html</li>
+			<li>Cross-Site Scripting (XSS) Tutorial: Learn About XSS Vulnerabilities, Injections and How to Prevent Attacks: http://www.veracode.com/security/xss</li>
+		</ul>
+		</ol>
+	</div>
+	
+</body>
+</html>
