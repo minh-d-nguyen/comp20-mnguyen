@@ -33,10 +33,10 @@
 		<li> <h4>Issues Found:</h4>
 			<ol>
 			<li>
-				Cross Site Scripting Vulnerability: <br>
-				Location found: https://polar-oasis-78824.herokuapp.com/ <br>
-				Severity: High. Might completely prevent the users from accessing the page. <br>
-				Description of issue: 
+				<em>Cross Site Scripting Vulnerability</em>: <br>
+				<i>Location found</i>: https://polar-oasis-78824.herokuapp.com/ <br>
+				<i>Severity</i>: High. Might completely prevent the users from accessing the page. <br>
+				<i>Description of issue:</i>
 				<ul>
 					<li>First: Use Postman to send a JavaScript function as username and legitimate values as lat and lng as shown below.</li>
 					<img src="xss-post.png" alt="Image not found!" class="issues"><br>
@@ -48,10 +48,10 @@
 			</li>
 			<br>
 			<li>
-				Junk data that can be injected that might affect the performance of web apps using the server to find passengers/vehicles: <br>
-				Location found: https://polar-oasis-78824.herokuapp.com/submit <br>
-				Severity: Low. Bad lat and lng values can be posted so that they are stored in the database as null values, which affects how the users are displayed on the map.<br>
-				Description of issue: 
+				<em>Junk data that can be injected that might affect the performance of web apps using the server to find passengers/vehicles:</em> <br>
+				<i>Location found</i>: https://polar-oasis-78824.herokuapp.com/submit <br>
+				<i>Severity</i>: Low. Bad lat and lng values can be posted so that they are stored in the database as null values, which affects how the users are displayed on the map.<br>
+				<i>Description of issue: </i>
 				<ul>
 					<li>First: Use Postman to send ' ' (an empty space) as lat and lng as shown below. </li>
 					<img src="latlng-issue.png" alt="Image not found!" class="issues"><br>
@@ -64,10 +64,10 @@
 			</li>
 			<br>
 			<li>
-				Potential illegal data modification issue:<br>
-				Location found: https://polar-oasis-78824.herokuapp.com/submit <br>
-				Severity: Low. MongoDB query-like string can be sent to the server to trick the server to search for username that is not allowed to be accessed. The result is not shown to the client, and the malicious username is not stored properly in the databse, but it might be an issue if MongoDB changes the way it stores data.<br>
-				Description of issue: 
+				<em>Potential illegal data modification issue:</em><br>
+				<i>Location found</i>: https://polar-oasis-78824.herokuapp.com/submit <br>
+				<i>Severity</i>: Low. MongoDB query-like string can be sent to the server to trick the server to search for username that is not allowed to be accessed. The result is not shown to the client, and the malicious username is not stored properly in the databse, but it might be an issue if MongoDB changes the way it stores data.<br>
+				<i>Description of issue: </i>
 				<ul>
 					<li>First: Use Postman to POST the following information. </li>
 					<img src="db-post.png" alt="Image not found!" class="issues"><br>
