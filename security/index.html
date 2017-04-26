@@ -50,7 +50,7 @@
 			<li>
 				<em>Junk data that can be injected that might affect the performance of web apps using the server to find passengers/vehicles:</em> <br>
 				<i>Location found</i>: https://polar-oasis-78824.herokuapp.com/submit <br>
-				<i>Severity</i>: Low. Bad lat and lng values can be posted so that they are stored in the database as null values, which affects how the users are displayed on the map.<br>
+				<i>Severity</i>: Low. Bad lat and lng values can be posted so that they are stored in the database as non-numeric values, which affects how the users are displayed on the map.<br>
 				<i>Description of issue: </i>
 				<ul>
 					<li>First: Use Postman to send ' ' (an empty space) as lat and lng as shown below. </li>
